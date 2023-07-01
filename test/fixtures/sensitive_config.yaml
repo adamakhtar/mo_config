@@ -1,0 +1,7 @@
+string_setting: "abc"
+integer_as_string_setting: "10"
+float_as_string_setting: "10.5"
+boolean_as_string_setting: "false"
+array_as_string_setting: "1,2"
+blank_string_setting: ""
+
