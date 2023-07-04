@@ -111,10 +111,10 @@ module MoConfig
     def self.prepare_error_result(string_or_nil, type, error_message)
       {
         result: :error,
-        error: :can_not_coerce,
+        code: :can_not_coerce,
         type: type,
         original_value: string_or_nil,
-        error_message: error_message
+        message: error_message
       }
     end
   end

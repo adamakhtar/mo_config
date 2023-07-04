@@ -26,6 +26,7 @@ module MoConfig
       def define_settings_methods
         settings.each_pair do |setting_name, setting|
           config_reader = ConfigReader.for(setting.source_config)
+
           define_singleton_method setting.name.to_s do
             if !config_reader.key_exists?(setting.name.to_s)
               raise MoConfig::MissingConfigError, "No config found for #{setting.name}."
@@ -49,6 +50,44 @@ module MoConfig
             value
           end
         end
+
+        def valid?
+          settings.each_pair do |setting_name, setting|
+            base_error = {
+              code: nil,
+              setting_name: setting_name,
+              source: setting.source_config.name,
+              source_path: setting.options[:file],
+              message: nil
+            }
+
+            # TODO - consider memoizing the config_readers as they could do IO and read files
+            config_reader = ConfigReader.for(setting.source_config)
+
+            if !config_reader.key_exists?(setting.name.to_s)
+              error = base_error.merge(code: :config_missing)
+              errors.add(error)
+              next
+            end
+
+            value = config_reader.value_for(setting.name.to_s)
+
+            case Coercion.coerce(value, to: setting.type)
+            in {result: :error} => coercion_error
+              error = base_error.merge(coercion_error.slice(:code, :message))
+              errors.add(error)
+              next
+            end
+
+            # TODO perform validation here
+          end
+
+          !self.errors.any?
+        end
+      end
+
+      def errors
+        @errors ||= Errors.new([])
       end
 
       private

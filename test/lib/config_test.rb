@@ -65,4 +65,40 @@ class MoConfig::ConfigTest < ActiveSupport::TestCase
     assert_equal false, config_class.boolean_as_string_setting
     assert_equal [1, 2], config_class.array_as_string_setting
   end
+
+  test "valid? returns false if config is missing" do
+    yaml_path = fixtures_path('sensitive_config.yaml')
+
+    config_class = Class.new do
+      include MoConfig
+
+      source :yaml, file: yaml_path do
+        setting :does_not_exist_in_yaml_file
+      end
+    end
+
+    config_class.valid?
+
+    error = config_class.errors.find_by(setting_name: :does_not_exist_in_yaml_file)
+    assert error
+    assert_equal :config_missing, error[:code]
+  end
+
+  test "valid? returns false if seting can not be coerced" do
+    yaml_path = fixtures_path('sensitive_config.yaml')
+
+    config_class = Class.new do
+      include MoConfig
+
+      source :yaml, file: yaml_path do
+        setting :float_as_string_setting, type: :integer
+      end
+    end
+
+    config_class.valid?
+
+    error = config_class.errors.find_by(setting_name: :float_as_string_setting)
+    assert error
+    assert_equal :can_not_coerce, error[:code]
+  end
 end

@@ -1,6 +1,7 @@
 require "mo_config/version"
 require "mo_config/engine"
 
+require "mo_config/errors"
 require "mo_config/setting"
 require "mo_config/coercion"
 require "mo_config/config_reader"
