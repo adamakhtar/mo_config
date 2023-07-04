@@ -6,6 +6,10 @@ class MoConfig::CoercionTest < ActiveSupport::TestCase
     assert_equal({result: :ok, value: 10}, MoConfig::Coercion.to_integer("10"))
   end
 
+  test "to_integer coerces integer" do
+    assert_equal({result: :ok, value: 10}, MoConfig::Coercion.to_integer(10))
+  end
+
   test "to_integer raises error with blank string" do
     result = MoConfig::Coercion.to_integer("")
 
@@ -17,6 +21,21 @@ class MoConfig::CoercionTest < ActiveSupport::TestCase
     assert_equal :error, result[:result]
   end
 
+  test "to_integer raises error with boolean" do
+    result = MoConfig::Coercion.to_integer(false)
+    assert_equal :error, result[:result]
+  end
+
+  test "to_integer raises error with array" do
+    result = MoConfig::Coercion.to_integer([1,2])
+    assert_equal :error, result[:result]
+  end
+
+  test "to_integer raises error with hash" do
+    result = MoConfig::Coercion.to_integer({})
+    assert_equal :error, result[:result]
+  end
+
   test "to_integer raises error with invalid string" do
     result = MoConfig::Coercion.to_integer("10.5")
     assert_equal :error, result[:result]
@@ -25,6 +44,10 @@ class MoConfig::CoercionTest < ActiveSupport::TestCase
 
   test "to_float coerces valid string" do
     assert_equal({result: :ok, value: 10.5}, MoConfig::Coercion.to_float("10.5"))
+  end
+
+  test "to_float coerces float" do
+    assert_equal({result: :ok, value: 10.5}, MoConfig::Coercion.to_float(10.5))
   end
 
   test "to_float raises error with invalid string" do
@@ -42,6 +65,20 @@ class MoConfig::CoercionTest < ActiveSupport::TestCase
     assert_equal :error, result[:result]
   end
 
+  test "to_float raises error with boolean" do
+    result = MoConfig::Coercion.to_float(false)
+    assert_equal :error, result[:result]
+  end
+
+  test "to_float raises error with array" do
+    result = MoConfig::Coercion.to_float([1,2])
+    assert_equal :error, result[:result]
+  end
+
+  test "to_float raises error with hash" do
+    result = MoConfig::Coercion.to_float({})
+    assert_equal :error, result[:result]
+  end
 
   test "to_boolean coerces valid string" do
     assert_equal({result: :ok, value: true}, MoConfig::Coercion.to_boolean("true"))
@@ -80,11 +117,43 @@ class MoConfig::CoercionTest < ActiveSupport::TestCase
     assert_equal :error, result[:result]
   end
 
+  test "to_boolean coerces boolean" do
+    assert_equal({result: :ok, value: true}, MoConfig::Coercion.to_boolean(true))
+    assert_equal({result: :ok, value: false}, MoConfig::Coercion.to_boolean(false))
+  end
+
+  test "to_boolean raises error with array" do
+    result = MoConfig::Coercion.to_boolean([1,2])
+    assert_equal :error, result[:result]
+  end
+
+  test "to_boolean raises error with hash" do
+    result = MoConfig::Coercion.to_boolean({})
+    assert_equal :error, result[:result]
+  end
+
 
   test "to_array coerces valid string" do
     assert_equal({result: :ok, value: [1, 2]}, MoConfig::Coercion.to_array("1, 2", :integer))
     assert_equal({result: :ok, value: [true, false]}, MoConfig::Coercion.to_array("true,false", :boolean))
     assert_equal({result: :ok, value: [1.5, 3.5]}, MoConfig::Coercion.to_array("1.5, 3.5", :float))
+  end
+
+  test "to_array coerces array with valid members" do
+    assert_equal({result: :ok, value: [1, 2]}, MoConfig::Coercion.to_array([1, 2], :integer))
+    assert_equal({result: :ok, value: [true, false]}, MoConfig::Coercion.to_array([true,false], :boolean))
+    assert_equal({result: :ok, value: [1.5, 3.5]}, MoConfig::Coercion.to_array([1.5, 3.5], :float))
+  end
+
+  test "to_array raises error with array with invalid members" do
+    result = MoConfig::Coercion.to_array(["1.1", "2.2"], :integer)
+    assert_equal :error, result[:result]
+
+    result = MoConfig::Coercion.to_array(["A", "B"], :boolean)
+    assert_equal :error, result[:result]
+
+    result = MoConfig::Coercion.to_array([true, false], :float)
+    assert_equal :error, result[:result]
   end
 
   test "to_array raises error with invalid string" do
