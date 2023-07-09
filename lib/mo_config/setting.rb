@@ -69,7 +69,7 @@ module MoConfig
     end
 
     def validate
-      validation_errors = run_validations(coerced_value, validations)
+      validation_errors = type.validate(coerced_value, validations)
       if validation_errors.empty?
         [:ok]
       else
@@ -96,20 +96,6 @@ module MoConfig
 
     def raw_value
       @raw_value ||= source.key(name)
-    end
-
-    # returns an array of error messages e.g.
-    # ['must be greater than ...', 'must be less than ...']
-    def run_validations(value, validations)
-      validations.each_with_object([]) do |(rule_name, constraint), error_array|
-        validator = type.validators.find {|validator| validator.matches?(rule_name)}
-        case validator.call(value, constraint)
-        in [:error, validation_error]
-          error_array << validation_error
-        else
-          next
-        end
-      end
     end
   end
 end

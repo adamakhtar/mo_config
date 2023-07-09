@@ -1,12 +1,12 @@
 module MoConfig
   module Type
-    class Integer < Base
+    class Float < Base
       VALIDATORS = [
         ::MoConfig::Validation::Gt
       ].freeze
 
       def self.coerce(value)
-        value = Integer(value)
+        value = Float(value)
         [:ok, value]
 
       rescue ArgumentError, TypeError => e
