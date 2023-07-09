@@ -27,13 +27,13 @@ module MoConfig
           settings_hash
         end
 
-        settings.merge!(settings_for_source)
-
-        settings.each_pair do |setting_name, setting|
+        settings_for_source.each_pair do |setting_name, setting|
           define_singleton_method setting.name.to_s do
             setting.value
           end
         end
+
+        settings.merge!(settings_for_source)
       end
 
       def valid?

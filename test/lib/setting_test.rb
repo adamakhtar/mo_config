@@ -7,7 +7,7 @@ class MoConfig::SettingTest < ActiveSupport::TestCase
         @data = data
       end
 
-      def key(name)
+      def value(name)
         @data[name.to_s]
       end
     end
@@ -68,7 +68,7 @@ class MoConfig::SettingTest < ActiveSupport::TestCase
   def build_setting(overrides={})
     attrs = {
       name: "age",
-      type: MoConfig::Type::Integer,
+      type: MoConfig::Type.for(:integer),
       config_name: "UserConfig",
       coerce: true,
       validations: {}
