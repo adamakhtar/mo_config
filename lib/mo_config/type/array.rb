@@ -5,7 +5,7 @@ module MoConfig
         ::MoConfig::Validation::Gt
       ].freeze
 
-      def self.coerce(value)
+      def coerce(value)
         valid_coercion_type_for_members = [:boolean, :float, :integer, :string].include?(member_type)
         if !valid_coercion_type_for_members
           raise MoConfig::Error, <<~ERROR.split("\n").join(" ")
@@ -43,7 +43,7 @@ module MoConfig
         end
       end
 
-      def self.coerce_array_elements(elements, to:, raw_value:)
+      def coerce_array_elements(elements, to:, raw_value:)
         initial_result = {coerced_array: [], error: nil}
 
         final_result = elements.each_with_object(initial_result) do |element, result|

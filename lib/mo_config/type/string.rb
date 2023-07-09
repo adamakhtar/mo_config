@@ -5,7 +5,7 @@ module MoConfig
         ::MoConfig::Validation::Gt
       ].freeze
 
-      def self.coerce(value)
+      def coerce(value)
         value = value.nil? ? "" : value
 
         if value.respond_to?(:to_s)

@@ -12,7 +12,7 @@ module MoConfig
         ::MoConfig::Validation::Gt
       ].freeze
 
-      def self.coerce(value)
+      def coerce(value)
         value = BOOLEAN_MAPPING.fetch(value) do
           return [:error, "can't change #{value.inspect} into boolean."]
         end

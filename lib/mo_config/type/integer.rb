@@ -5,7 +5,7 @@ module MoConfig
         ::MoConfig::Validation::Gt
       ].freeze
 
-      def self.coerce(value)
+      def coerce(value)
         value = Integer(value)
         [:ok, value]
 
