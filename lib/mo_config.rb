@@ -2,8 +2,11 @@ require "mo_config/version"
 require "mo_config/engine"
 
 require "mo_config/errors"
-require "mo_config/setting"
 require "mo_config/coercion"
+require "mo_config/validation"
+require "mo_config/validation/gt"
+require "mo_config/setting"
+require "mo_config/setting/integer"
 require "mo_config/config_reader"
 require "mo_config/config_reader/base"
 require "mo_config/config_reader/yaml"
@@ -14,6 +17,7 @@ module MoConfig
   class Error < StandardError; end
   class CoercionError < Error; end
   class MissingConfigError < Error; end
+  class ValidationError < Error; end
 
   def self.included(base)
     base.class_eval do

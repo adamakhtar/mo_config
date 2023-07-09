@@ -22,7 +22,7 @@ module MoConfig
         # e.g. [:integer] or [:boolean]
         to_array(value, to[0])
       else
-        raise Error.new "Can not coerce into requested type. #{to.inspect} is not recognized."
+        raise ArgumentError.new "Can not coerce into requested type. #{to.inspect} is not recognized."
       end
     end
 
@@ -30,7 +30,7 @@ module MoConfig
       value = value.nil? ? "" : value
 
       if value.respond_to?(:to_s)
-        {result: :ok, value: value.to_s}
+        prepare_ok_result(value.to_s)
       else
         prepare_error_result(value, :string, "Can not coerce #{value.inspect} into type String.")
       end
@@ -38,7 +38,7 @@ module MoConfig
 
     def self.to_integer(value)
       value = Integer(value)
-      {result: :ok, value: value}
+      prepare_ok_result(value)
 
     rescue ArgumentError, TypeError => e
       prepare_error_result(value, :integer, e.message)
@@ -46,7 +46,7 @@ module MoConfig
 
     def self.to_float(value)
       value = Float(value)
-      {result: :ok, value: value}
+      prepare_ok_result(value)
 
     rescue ArgumentError, TypeError => e
       prepare_error_result(value, :float, e.message)
@@ -61,7 +61,7 @@ module MoConfig
         )
       end
 
-      {result: :ok, value: value}
+      prepare_ok_result(value)
 
     rescue ArgumentError, TypeError => e
       prepare_error_result(value, :boolean, e.message)
@@ -110,10 +110,10 @@ module MoConfig
 
       final_result = elements.each_with_object(initial_result) do |element, result|
         case coerce(element, to: to)
-        in {result: :ok, value: coerced_value}
+        in [:ok, coerced_value]
           result[:coerced_array] << coerced_value
           result
-        in {result: :error} => error_result
+        in [:error] => error_result
           result[:error] = error_result
           result
         end
@@ -130,18 +130,23 @@ module MoConfig
 
         final_result[:error]
       else
-        {result: :ok, value: final_result[:coerced_array]}
+        prepare_ok_result(final_result[:coerced_array])
       end
     end
 
+    def self.prepare_ok_result(value)
+      [:ok, value]
+    end
+
     def self.prepare_error_result(value, type, error_message)
-      {
-        result: :error,
-        code: :can_not_coerce,
-        type: type,
-        original_value: value,
-        message: error_message
-      }
+      [:error, error_message]
+
+      #   result: :error,
+      #   code: :can_not_coerce,
+      #   type: type,
+      #   original_value: value,
+      #   message: error_message
+      # }
     end
   end
 end
