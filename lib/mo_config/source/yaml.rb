@@ -1,6 +1,10 @@
 module MoConfig
   class Source
     class Yaml < Base
+      def self.match?(source_type)
+        source_type == :yaml
+      end
+
       def key?(key)
         data.key?(key.to_s)
       end

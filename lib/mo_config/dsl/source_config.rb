@@ -14,7 +14,7 @@ module MoConfig
       end
 
       def setting(name, options={})
-        @settings_config << options.merge({source_config: self, name: name})
+        @settings_config << options.merge({name: name})
       end
     end
   end

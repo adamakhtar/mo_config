@@ -14,7 +14,7 @@ module MoConfig
 
       def self.coerce(value)
         value = BOOLEAN_MAPPING.fetch(value) do
-          return [:error, "can't change #{value.inspect} into boolean."
+          return [:error, "can't change #{value.inspect} into boolean."]
         end
 
         [:ok, value]

@@ -10,7 +10,7 @@ module MoConfig
     def initialize(name:, type:, config_name:, source:, coerce: false, validations: {})
       @name = name.to_sym
       @coerce = coerce
-      @config_name = config_name.to_sym
+      @config_name = config_name
       @source = source
       @validations = validations
       @raw_value = nil
@@ -95,7 +95,7 @@ module MoConfig
     end
 
     def raw_value
-      @raw_value ||= source.key(name)
+      @raw_value ||= source.value(name)
     end
   end
 end
