@@ -4,7 +4,7 @@ module MoConfig
       if name.is_a?(Array)
         type_klass = Object.const_get("MoConfig::Type::Array")
         member_type_klass = Object.const_get("MoConfig::Type::#{name[0].capitalize}")
-        klass.new(member_type: member_type_klass)
+        klass.new(member_type: member_type_klass.new)
       else
         klass = Object.const_get("MoConfig::Type::#{name.capitalize}")
         klass.new

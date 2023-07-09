@@ -18,6 +18,14 @@ module MoConfig
 
         errors
       end
+
+      def name
+        self.class.name.split("::").last.downcase.to_sym
+      end
+
+      private
+
+      attr_reader :options
     end
   end
 end
