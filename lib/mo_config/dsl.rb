@@ -13,7 +13,6 @@ module MoConfig
 
         sources[name] ||= MoConfig::Source.for(name, options)
 
-        # TODO move to Setting.initalize_many(....) ?
         settings_for_source = source_config.settings_config.each_with_object({}) do |setting_config, settings_hash|
           type_klass = MoConfig::Type.for(setting_config[:type])
           settings_attrs = setting_config.merge(

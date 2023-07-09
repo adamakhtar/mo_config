@@ -2,7 +2,10 @@ module MoConfig
   module Type
     class Array < Base
       VALIDATORS = [
-        ::MoConfig::Validation::Gt
+        ::MoConfig::Validation::Gt,
+        ::MoConfig::Validation::Gte,
+        ::MoConfig::Validation::Lt,
+        ::MoConfig::Validation::Lte
       ].freeze
 
       SUPPORTED_MEMBER_TYPES = [

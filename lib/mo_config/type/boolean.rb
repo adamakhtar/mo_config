@@ -9,7 +9,6 @@ module MoConfig
       )
 
       VALIDATORS = [
-        ::MoConfig::Validation::Gt
       ].freeze
 
       def coerce(value)

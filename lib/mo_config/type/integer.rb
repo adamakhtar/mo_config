@@ -2,7 +2,10 @@ module MoConfig
   module Type
     class Integer < Base
       VALIDATORS = [
-        ::MoConfig::Validation::Gt
+        ::MoConfig::Validation::Gt,
+        ::MoConfig::Validation::Gte,
+        ::MoConfig::Validation::Lt,
+        ::MoConfig::Validation::Lte
       ].freeze
 
       def coerce(value)
