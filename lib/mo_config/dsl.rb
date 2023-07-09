@@ -15,7 +15,13 @@ module MoConfig
 
         # TODO move to Setting.initalize_many(....) ?
         settings_for_source = source_config.settings_config.each_with_object({}) do |setting_config, settings_hash|
-          settings_attrs = setting_config.merge(config_name: self.name, source: sources[name])
+          type_klass = MoConfig::Type.for(setting_config[:type])
+          settings_attrs = setting_config.merge(
+            config_name: self.name,
+            source: sources[name],
+            type: type_klass
+          )
+
           setting = MoConfig::Setting.new(**settings_attrs)
           settings_hash[setting.name] = setting
           settings_hash

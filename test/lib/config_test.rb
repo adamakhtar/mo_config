@@ -7,7 +7,7 @@ class MoConfig::ConfigTest < ActiveSupport::TestCase
     config_class = Class.new do
       include MoConfig
       source :yaml, file: yaml_path do
-        setting "integer_setting", type: MoConfig::Type::Integer
+        setting "integer_setting", type: :integer
       end
     end
 
@@ -21,7 +21,7 @@ class MoConfig::ConfigTest < ActiveSupport::TestCase
       include MoConfig
 
       source :yaml, file: yaml_path do
-        setting :blank_string_setting, type: MoConfig::Type::Integer
+        setting :blank_string_setting, type: :integer
       end
     end
 
@@ -37,10 +37,10 @@ class MoConfig::ConfigTest < ActiveSupport::TestCase
       include MoConfig
 
       source :yaml, file: yaml_path do
-        setting :integer_as_string_setting, type: MoConfig::Type::Integer
-        setting :float_as_string_setting, type: MoConfig::Type::Float
-        setting :boolean_as_string_setting, type: MoConfig::Type::Boolean
-        # setting :array_as_string_setting, type: MoConfig::Type::Array
+        setting :integer_as_string_setting, type: :integer
+        setting :float_as_string_setting, type: :float
+        setting :boolean_as_string_setting, type: :boolean
+        # setting :array_as_string_setting, type: :array
       end
     end
 
@@ -57,9 +57,9 @@ class MoConfig::ConfigTest < ActiveSupport::TestCase
       include MoConfig
 
       source :yaml, file: yaml_path do
-        setting :integer_setting, type: MoConfig::Type::Integer
-        setting :float_setting, type: MoConfig::Type::Float
-        setting :boolean_setting, type: MoConfig::Type::Boolean
+        setting :integer_setting, type: :integer
+        setting :float_setting, type: :float
+        setting :boolean_setting, type: :boolean
         # setting :array_setting, type: [:integer]
       end
     end
@@ -77,7 +77,7 @@ class MoConfig::ConfigTest < ActiveSupport::TestCase
       include MoConfig
 
       source :yaml, file: yaml_path do
-        setting :float_as_string_setting, type: MoConfig::Type::Integer
+        setting :float_as_string_setting, type: :integer
       end
     end
 
