@@ -1,4 +1,5 @@
 module MoConfig
-  module Validation    
+  module Validation
+
   end
 end

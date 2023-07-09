@@ -1,6 +1,6 @@
 require "test_helper"
 
-class MoConfig::Setting::IntegerTest < ActiveSupport::TestCase
+class MoConfig::SettingTest < ActiveSupport::TestCase
   setup do
     @source_klass = Class.new() do
       def initialize(data)
@@ -68,12 +68,13 @@ class MoConfig::Setting::IntegerTest < ActiveSupport::TestCase
   def build_setting(overrides={})
     attrs = {
       name: "age",
+      type: MoConfig::Type::Integer,
       config_name: "UserConfig",
       coerce: true,
       validations: {}
     }.merge(overrides)
 
-    ::MoConfig::Setting::Integer.new(**attrs)
+    ::MoConfig::Setting.new(**attrs)
   end
 end
 
