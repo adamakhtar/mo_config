@@ -38,8 +38,7 @@ module MoConfig
   module ClassMethods
     def source(name, options={}, &settings_block)
       sources[name] ||= MoConfig::Source.for(name, options)
-
-      settings_config = Dsl.compile_source_and_settings(name, options, &settings_block)
+      settings_config = Dsl.compile_source_and_settings(&settings_block)
 
       settings_for_source = settings_config.each_with_object({}) do |setting_config, settings_hash|
         type_klass = MoConfig::Type.for(setting_config[:type])

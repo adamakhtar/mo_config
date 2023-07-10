@@ -1,16 +1,14 @@
 module MoConfig
   class Dsl
-    attr_reader :settings_config, :name, :options
+    attr_reader :settings_config
 
-    def self.compile_source_and_settings(source_name, source_options, &settings_block)
-      dsl = new(source_name, source_options)
+    def self.compile_source_and_settings(&settings_block)
+      dsl = new()
       dsl.compile_settings(&settings_block)
       dsl.settings_config
     end
 
-    def initialize(name, options={})
-      @name = name
-      @options = options
+    def initialize
       @settings_config = []
     end
 
