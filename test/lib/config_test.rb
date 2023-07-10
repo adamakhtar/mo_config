@@ -27,6 +27,17 @@ class MoConfig::ConfigTest < ActiveSupport::TestCase
     end
   end
 
+  test "configures settings and retrieves their values for credential sources" do
+    config_class = Class.new do
+      include MoConfig
+      source :credentials do
+        setting "integer_setting", type: :integer
+      end
+    end
+
+    assert_equal 10, config_class.integer_setting
+  end
+
   test "raises error when a settings value can not be coerced to desired type" do
     yaml_path = fixtures_path('sensitive_config.yaml')
 
