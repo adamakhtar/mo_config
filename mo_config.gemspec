@@ -22,5 +22,6 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "rails", ">= 7.0.5"
   spec.add_development_dependency "byebug"
+  spec.add_development_dependency "climate_control"
   spec.add_development_dependency "minitest-focus"
 end

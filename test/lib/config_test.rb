@@ -1,7 +1,7 @@
 require "test_helper"
 
 class MoConfig::ConfigTest < ActiveSupport::TestCase
-  test "configures settings and retrieves their values" do
+  test "configures settings and retrieves their values for yaml sources" do
     yaml_path = fixtures_path('sensitive_config.yaml')
 
     config_class = Class.new do
@@ -12,6 +12,19 @@ class MoConfig::ConfigTest < ActiveSupport::TestCase
     end
 
     assert_equal 10, config_class.integer_setting
+  end
+
+  test "configures settings and retrieves their values for env sources" do
+    config_class = Class.new do
+      include MoConfig
+      source :env do
+        setting "integer_setting", type: :integer
+      end
+    end
+
+    ClimateControl.modify INTEGER_SETTING: "10" do
+      assert_equal 10, config_class.integer_setting
+    end
   end
 
   test "raises error when a settings value can not be coerced to desired type" do
