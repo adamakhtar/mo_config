@@ -56,17 +56,19 @@ module MoConfig
           ERROR
         end
 
+        method_name = setting.name.to_s + "!"
+
         # prevent defining a setting with the same name more than once. Otherwise previous previous
         # definitions will get clobbered.
-        if respond_to? setting.name.to_s
+        if respond_to? method_name
           raise DuplicateSettingError, <<~ERROR.split("\n").join(" ")
             Settings must have unique names. The setting "#{setting.name}" has been defined more
             than once in #{self.name}. Plese remove or rename it.
           ERROR
         end
 
-        define_singleton_method setting.name.to_s do
-          setting.value
+        define_singleton_method(method_name) do
+          setting.value!
         end
       end
 

@@ -39,28 +39,28 @@ class MoConfig::SettingTest < ActiveSupport::TestCase
     assert setting.errors.empty?
   end
 
-  test "value returns the value when coercion and validation are successful" do
+  test "value! returns the value when coercion and validation are successful" do
     source = @source_klass.new("age" => "10")
     setting = build_setting(name: :age, source: source, coerce: true, validations: {gt: 9})
 
-    assert_equal 10, setting.value
+    assert_equal 10, setting.value!
   end
 
-  test "value raises an error when coercion fails" do
+  test "value! raises an error when coercion fails" do
     source = @source_klass.new("age" => nil)
     setting = build_setting(name: :age, source: source, coerce: true)
 
     assert_raises MoConfig::CoercionError, /can't coerce nil into Integer/ do
-      setting.value
+      setting.value!
     end
   end
 
-  test "value raises an error when validation fails" do
+  test "value! raises an error when validation fails" do
     source = @source_klass.new("age" => 10)
     setting = build_setting(name: :age, source: source, validations: {gt: 11})
 
     assert_raises MoConfig::ValidationError, /can't coerce nil into Integer/ do
-      setting.value
+      setting.value!
     end
   end
 

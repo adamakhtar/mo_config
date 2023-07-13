@@ -11,7 +11,7 @@ class MoConfig::ConfigTest < ActiveSupport::TestCase
       end
     end
 
-    assert_equal 10, config_class.integer_setting
+    assert_equal 10, config_class.integer_setting!
   end
 
   test "configures settings and retrieves their values for env sources" do
@@ -23,7 +23,7 @@ class MoConfig::ConfigTest < ActiveSupport::TestCase
     end
 
     ClimateControl.modify INTEGER_SETTING: "10" do
-      assert_equal 10, config_class.integer_setting
+      assert_equal 10, config_class.integer_setting!
     end
   end
 
@@ -35,7 +35,7 @@ class MoConfig::ConfigTest < ActiveSupport::TestCase
       end
     end
 
-    assert_equal 10, config_class.integer_setting
+    assert_equal 10, config_class.integer_setting!
   end
 
   test "raises error when a setting with the same name is defined multiple times in the same source" do
@@ -93,7 +93,7 @@ class MoConfig::ConfigTest < ActiveSupport::TestCase
     end
 
     assert_raises MoConfig::CoercionError do
-      config_class.blank_string_setting
+      config_class.blank_string_setting!
     end
   end
 
@@ -111,9 +111,9 @@ class MoConfig::ConfigTest < ActiveSupport::TestCase
       end
     end
 
-    assert_equal 10, config_class.integer_as_string_setting
-    assert_equal 10.5, config_class.float_as_string_setting
-    assert_equal false, config_class.boolean_as_string_setting
+    assert_equal 10, config_class.integer_as_string_setting!
+    assert_equal 10.5, config_class.float_as_string_setting!
+    assert_equal false, config_class.boolean_as_string_setting!
     # assert_equal [1, 2], config_class.array_as_string_setting
   end
 
@@ -131,9 +131,9 @@ class MoConfig::ConfigTest < ActiveSupport::TestCase
       end
     end
 
-    assert_equal 10, config_class.integer_setting
-    assert_equal 10.5, config_class.float_setting
-    assert_equal false, config_class.boolean_setting
+    assert_equal 10, config_class.integer_setting!
+    assert_equal 10.5, config_class.float_setting!
+    assert_equal false, config_class.boolean_setting!
     # assert_equal [1, 2], config_class.array_setting
   end
 

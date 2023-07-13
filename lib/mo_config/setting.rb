@@ -20,7 +20,7 @@ module MoConfig
       @errors = {}
     end
 
-    def value
+    def value!
       @value ||= begin
         coerce!
         validate!
