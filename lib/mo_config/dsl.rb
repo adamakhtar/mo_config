@@ -1,23 +1,27 @@
 module MoConfig
   class Dsl
-    attr_reader :settings_config
-
-    def self.compile_source_settings(&settings_block)
-      dsl = new()
-      dsl.compile_settings(&settings_block)
-      dsl.settings_config
-    end
-
-    def initialize
-      @settings_config = []
+    def initialize(source, config_name)
+      @source = source
+      @config_name = config_name
+      @compiled_settings = []
     end
 
     def compile_settings(&settings_block)
       instance_eval(&settings_block)
+
+      @compiled_settings
     end
 
     def setting(name, options={})
-      @settings_config << options.merge({name: name})
+      type_klass = MoConfig::Type.for(options[:type])
+      settings_attrs = options.merge(
+      name: name,
+      config_name: @config_name,
+      source: @source,
+      type: type_klass
+      )
+
+      @compiled_settings << MoConfig::Setting.new(**settings_attrs)
     end
   end
 end
