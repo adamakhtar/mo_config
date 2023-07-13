@@ -28,6 +28,10 @@ module MoConfig
   class CoercionError < Error; end
   class MissingConfigError < Error; end
   class ValidationError < Error; end
+  class DuplicateSettingError < Error; end
+  class ReservedNameError < Error; end
+
+  RESERVED_NAMES = %w{source setting settings sources valid? errors}
 
   def self.included(base)
     base.class_eval do
@@ -40,7 +44,7 @@ module MoConfig
       sources[name] ||= MoConfig::Source.for(name, options)
       settings_config = Dsl.compile_source_settings(&settings_block)
 
-      settings_for_source = settings_config.each_with_object({}) do |setting_config, settings_hash|
+      source_settings = settings_config.each_with_object([]) do |setting_config, settings_array|
         type_klass = MoConfig::Type.for(setting_config[:type])
         settings_attrs = setting_config.merge(
           config_name: self.name,
@@ -49,29 +53,59 @@ module MoConfig
         )
 
         setting = MoConfig::Setting.new(**settings_attrs)
-        settings_hash[setting.name] = setting
-        settings_hash
+        settings_array << setting
+        settings_array
       end
 
-      settings_for_source.each_pair do |setting_name, setting|
+      # Ensure no settings have reserved words as their names
+      reserved_settings = source_settings.select { |setting| RESERVED_NAMES.include?(setting.name.to_s) }
+                                       .map(&:name)
+
+      if reserved_settings.any?
+        raise ReservedNameError, <<~ERROR.split("\n").join(" ")
+          The settings #{reserved_settings.join(", ")} in config class #{self.name} have names that
+          are not allowed to be used. Please change them to something else.
+          Settings can't be named any of the following: #{RESERVED_NAMES.join(", ")} names.
+        ERROR
+      end
+
+      # Ensure there are no settings with the same name for this source or in previously
+      # registered sources
+      # {some_setting: [setting_a, setting_b] ...}
+      settings_grouped_by_name = (settings + source_settings).group_by(&:name)
+      duplicated_settings = settings_grouped_by_name.select {|name, group| group.size > 1 }.keys
+
+      if duplicated_settings.any?
+        raise DuplicateSettingError, <<~ERROR.split("\n").join(" ")
+          Settings must have unique names. The following settings have been defined more than once
+          in #{self.name}. #{duplicated_settings.join(", ")}. Please remove duplicates or change
+          the setting names.
+        ERROR
+      end
+
+
+      source_settings.each do |setting|
+        # prevent a setting with the same name from being defined more than once.
+        # Otherwise previous definitions will get clobbered.
         define_singleton_method setting.name.to_s do
           setting.value
         end
       end
 
-      settings.merge!(settings_for_source)
+
+      settings.concat(source_settings)
     end
 
     def valid?
-      settings.each_pair do |setting_name, setting|
+      settings.each do |setting|
         setting.valid?
 
         setting.errors.each_pair do |error_type, error_messages|
           errors.add(setting.name, type: error_type, error_messages: error_messages)
         end
-
-        errors.any?
       end
+
+      errors.any?
     end
 
     def errors
@@ -85,7 +119,7 @@ module MoConfig
     end
 
     def settings
-      @settings ||= {}
+      @settings ||= []
     end
   end
 end

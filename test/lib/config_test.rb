@@ -38,6 +38,49 @@ class MoConfig::ConfigTest < ActiveSupport::TestCase
     assert_equal 10, config_class.integer_setting
   end
 
+  test "raises error when a setting with the same name is defined multiple times in the same source" do
+    assert_raises MoConfig::DuplicateSettingError do
+      Class.new do
+        include MoConfig
+        source :credentials do
+          setting "integer_setting", type: :integer
+          setting "integer_setting", type: :integer
+        end
+      end
+    end
+  end
+
+  test "raises error when a setting with the same name is defined across mutliple sources" do
+    assert_raises MoConfig::DuplicateSettingError do
+      Class.new do
+        include MoConfig
+        source :credentials do
+          setting "integer_setting", type: :integer
+        end
+
+        source :env do
+          setting "integer_setting", type: :integer
+        end
+      end
+    end
+  end
+
+  test "raises error when a setting has a name that is reserved" do
+    assert_raises MoConfig::ReservedNameError do
+      Class.new do
+        include MoConfig
+        source :credentials do
+          setting "source", type: :integer
+          setting "sources", type: :integer
+          setting "setting", type: :integer
+          setting "settings", type: :integer
+          setting "valid?", type: :integer
+          setting "errors", type: :integer
+        end
+      end
+    end
+  end
+
   test "raises error when a settings value can not be coerced to desired type" do
     yaml_path = fixtures_path('sensitive_config.yaml')
 
