@@ -8,10 +8,6 @@ module MoConfig
       def value(key)
         Rails.application.credentials.send(key.to_s)
       end
-
-      def description
-        "Credentials"
-      end
     end
   end
 end

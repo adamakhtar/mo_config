@@ -5,16 +5,8 @@ module MoConfig
         source_type == :env
       end
 
-      def key?(key)
-        data.key?(key.to_s)
-      end
-
       def value(key)
         ENV[key.upcase.to_s]
-      end
-
-      def description
-        "ENV"
       end
     end
   end

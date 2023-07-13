@@ -22,14 +22,6 @@ module MoConfig
         raise "You must implement this in the subclass"
       end
 
-      def key?(key)
-        raise "You must implement this in the subclass"
-      end
-
-      def description
-        raise "You must implement this in the subclass"
-      end
-
       private
 
       attr_reader :options

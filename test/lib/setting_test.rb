@@ -64,7 +64,6 @@ class MoConfig::SettingTest < ActiveSupport::TestCase
     end
   end
 
-
   def build_setting(overrides={})
     attrs = {
       name: "age",

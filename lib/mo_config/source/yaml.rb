@@ -5,16 +5,8 @@ module MoConfig
         source_type == :yaml
       end
 
-      def key?(key)
-        data.key?(key.to_s)
-      end
-
       def value(key)
         data[key.to_s]
-      end
-
-      def description
-        "YAML #{source.options[:file]}"
       end
 
       private
