@@ -1,8 +1,8 @@
 # MoConfig
-Short description and motivation.
+
+**Not ready for use**. I'm still working on this.
 
 ## Usage
-How to use my plugin.
 
 ## Installation
 Add this line to your application's Gemfile:
