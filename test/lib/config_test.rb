@@ -107,14 +107,14 @@ class MoConfig::ConfigTest < ActiveSupport::TestCase
         setting :integer_as_string_setting, type: :integer
         setting :float_as_string_setting, type: :float
         setting :boolean_as_string_setting, type: :boolean
-        # setting :array_as_string_setting, type: :array
+        setting :array_as_string_setting, type: :array
       end
     end
 
     assert_equal 10, config_class.integer_as_string_setting!
     assert_equal 10.5, config_class.float_as_string_setting!
     assert_equal false, config_class.boolean_as_string_setting!
-    # assert_equal [1, 2], config_class.array_as_string_setting
+    assert_equal ["1", "2"], config_class.array_as_string_setting!
   end
 
   test "coerces settings that are already in the right type without erroring" do
@@ -127,14 +127,14 @@ class MoConfig::ConfigTest < ActiveSupport::TestCase
         setting :integer_setting, type: :integer
         setting :float_setting, type: :float
         setting :boolean_setting, type: :boolean
-        # setting :array_setting, type: [:integer]
+        setting :array_setting, type: :array
       end
     end
 
     assert_equal 10, config_class.integer_setting!
     assert_equal 10.5, config_class.float_setting!
     assert_equal false, config_class.boolean_setting!
-    # assert_equal [1, 2], config_class.array_setting
+    assert_equal [1, 2], config_class.array_setting!
   end
 
   test "valid? returns false if any seting are invalid" do
